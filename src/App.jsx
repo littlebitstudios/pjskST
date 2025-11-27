@@ -502,7 +502,7 @@ function App() {
       </main>
 
       <footer>
-        Created by LittleBit | Open-source on GitHub <a href="https://github.com/littlebitstudios/pjsk-tscore-rating-calculator"></a>
+        Created by LittleBit | Open-source on <a href="https://github.com/littlebitstudios/pjskST">GitHub</a>
       </footer>
 
       <MessageDisplay message={message} onClose={() => setMessage(null)} />
