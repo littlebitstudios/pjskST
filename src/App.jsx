@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Music, Gauge, Star, Trophy, AlertTriangle, CheckCircle, Trash, Download, Upload } from 'lucide-react'; 
+import { Music, Gauge, Star, Trophy, AlertTriangle, CheckCircle, Trash, Download, Upload, Check } from 'lucide-react';
 import "./App.css"
 
 // --- CONFIGURATION AND UTILITIES ---
@@ -10,7 +10,7 @@ function calculateTechScore(perfect, great, good, bad, miss) {
 
   if (totalNotes === 0) return 0;
 
-  const scorePerNote = maxTechScore / totalNotes; 
+  const scorePerNote = maxTechScore / totalNotes;
   let techScore = maxTechScore;
 
   techScore -= (scorePerNote * 0.25) * great;
@@ -35,13 +35,13 @@ function calculateExScore(perfect, great, good, bad, miss) {
  */
 function calculateRatingValue(level, technicalScore) {
   const maxTechScore = 1010000;
-  
+
   // Score normalization (0 to 1)
   const R = technicalScore / maxTechScore;
-  
+
   // Base Value calculation (Scaled by 10 to provide larger numbers)
   const baseValue = level * R;
-  
+
   return baseValue;
 }
 
@@ -51,21 +51,21 @@ function calculateRatingValue(level, technicalScore) {
  */
 function calculatePlayerRating(scores) {
   if (!scores || scores.length === 0) return 0;
-  
+
   // 1. Filter out failed scores
   const nonFailedScores = scores.filter(score => !score.failure);
-  
+
   // 2. Sort by baseRatingValue descending
   // Use the optional chaining on baseRatingValue for safety during imports
   const sortedScores = nonFailedScores.sort((a, b) => (b.baseRatingValue || 0) - (a.baseRatingValue || 0));
-  
+
   // 3. Take the top 10 scores
   const top10Scores = sortedScores.slice(0, 10);
-  
+
   // 4. Sum the top 10 baseRatingValues
   const totalRating = top10Scores.reduce((sum, score) => sum + (score.baseRatingValue || 0), 0);
-  
-  return parseFloat(totalRating.toFixed(2)/10);
+
+  return parseFloat(totalRating.toFixed(2) / 10);
 }
 
 
@@ -79,28 +79,28 @@ const ScoreBox = ({ score, onDelete }) => {
   const getClearStatus = (type) => {
     switch (type) {
       case 'allperfect':
-        return { 
-          text: 'All Perfect!', 
-          color: 'bg-yellow-400 text-gray-900', 
-          icon: <CheckCircle className="w-5 h-5" /> 
+        return {
+          text: 'All Perfect!',
+          color: 'bg-yellow-400 text-gray-900',
+          icon: <CheckCircle className="w-5 h-5" />
         };
       case 'fullcombo':
-        return { 
-          text: 'Full Combo', 
-          color: 'bg-green-500 text-white', 
-          icon: <Trophy className="w-5 h-5" /> 
+        return {
+          text: 'Full Combo',
+          color: 'bg-green-500 text-white',
+          icon: <Trophy className="w-5 h-5" />
         };
       case 'failed':
-        return { 
-          text: 'Failed', 
-          color: 'bg-red-600 text-white', 
-          icon: <AlertTriangle className="w-5 h-5" /> 
+        return {
+          text: 'Failed',
+          color: 'bg-red-600 text-white',
+          icon: <AlertTriangle className="w-5 h-5" />
         };
       default:
-        return { 
-          text: 'Clear', 
-          color: 'bg-gray-500 text-white', 
-          icon: <AlertTriangle className="w-5 h-5" /> 
+        return {
+          text: 'Clear',
+          color: 'bg-gray-500 text-white',
+          icon: <Check className="w-5 h-5" />
         };
     }
   };
@@ -131,7 +131,7 @@ const ScoreBox = ({ score, onDelete }) => {
 
   return (
     <div className="bg-gray-800 border-b-4 border-indigo-600 p-4 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 transform hover:scale-[1.01] relative">
-      
+
       {/* Delete Button - positioned absolutely */}
       <button
         onClick={onDelete}
@@ -147,7 +147,7 @@ const ScoreBox = ({ score, onDelete }) => {
           <Music className="w-6 h-6 text-indigo-400" />
           <h3 className="text-xl font-extrabold text-white break-words">{score.songName || "Untitled Score"}</h3>
         </div>
-        
+
         {/* Updated Difficulty Badge */}
         <div className={`text-sm font-bold px-3 py-1 rounded-full uppercase shadow-sm ${difficultyColorClass}`}>
           {score.songDifficulty} <span className="opacity-75">|</span> Lvl {score.songLevel}
@@ -182,7 +182,7 @@ const ScoreBox = ({ score, onDelete }) => {
           </p>
         </div>
       </div>
-      
+
       {/* Hit Breakdown */}
       <div className="mt-4 pt-4 border-t border-gray-700 text-sm text-gray-400">
         <p>Hits: PF:{score.perfectHits} | GT:{score.greatHits} | GD:{score.goodHits} | B:{score.badHits} | M:{score.missedHits}</p>
@@ -195,21 +195,21 @@ const ScoreBox = ({ score, onDelete }) => {
 
 // --- Message Display Component (Custom modal to replace alert/confirm) ---
 const MessageDisplay = ({ message, onClose }) => {
-    if (!message) return null;
+  if (!message) return null;
 
-    const baseClass = "p-3 rounded-lg text-sm font-medium flex justify-between items-center fixed bottom-4 left-1/2 transform -translate-x-1/2 shadow-lg z-50 transition-opacity duration-300";
-    const colorClass = message.type === 'error' 
-        ? 'bg-red-600 text-white' 
-        : 'bg-green-600 text-white';
+  const baseClass = "p-3 rounded-lg text-sm font-medium flex justify-between items-center fixed bottom-4 left-1/2 transform -translate-x-1/2 shadow-lg z-50 transition-opacity duration-300";
+  const colorClass = message.type === 'error'
+    ? 'bg-red-600 text-white'
+    : 'bg-green-600 text-white';
 
-    return (
-        <div className={`${baseClass} ${colorClass}`}>
-            <span>{message.text}</span>
-            <button onClick={onClose} className="ml-4 font-bold text-lg leading-none opacity-80 hover:opacity-100">
-                &times;
-            </button>
-        </div>
-    );
+  return (
+    <div className={`${baseClass} ${colorClass}`}>
+      <span>{message.text}</span>
+      <button onClick={onClose} className="ml-4 font-bold text-lg leading-none opacity-80 hover:opacity-100">
+        &times;
+      </button>
+    </div>
+  );
 };
 
 
@@ -238,13 +238,13 @@ function App() {
     } catch (e) {
       console.error("Could not save scores to localStorage:", e);
     }
-  }, [scores]); 
-  
+  }, [scores]);
+
   // Auto-clear message after 5 seconds
   useEffect(() => {
     if (message) {
-        const timer = setTimeout(() => setMessage(null), 5000);
-        return () => clearTimeout(timer);
+      const timer = setTimeout(() => setMessage(null), 5000);
+      return () => clearTimeout(timer);
     }
   }, [message]);
 
@@ -284,9 +284,9 @@ function App() {
     score.goodHits = parseInt(formData.get("goodHits")) || 0
     score.badHits = parseInt(formData.get("badHits")) || 0
     score.missedHits = parseInt(formData.get("missedHits")) || 0
-    
+
     // Checkbox is "on" if checked, null otherwise. Convert to boolean.
-    score.failure = !!formData.get("failure"); 
+    score.failure = !!formData.get("failure");
 
     // Determine clear type, prioritizing failure
     if (score.failure) {
@@ -304,25 +304,25 @@ function App() {
 
     score.technicalScore = calculateTechScore(score.perfectHits, score.greatHits, score.goodHits, score.badHits, score.missedHits)
     score.exScore = calculateExScore(score.perfectHits, score.greatHits, score.goodHits, score.badHits, score.missedHits)
-    
+
     // Calculate Base Rating Value
     score.baseRatingValue = calculateRatingValue(score.songLevel, score.technicalScore);
-    
-    setScores(prevScores => [...prevScores, score]); 
+
+    setScores(prevScores => [...prevScores, score]);
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     saveScore(new FormData(e.target));
     e.target.reset();
   }
-  
+
   // --- Import / Export Handlers ---
-  
+
   const handleExport = () => {
     if (scores.length === 0) {
-        setMessage({ type: 'error', text: 'No scores to export!' });
-        return;
+      setMessage({ type: 'error', text: 'No scores to export!' });
+      return;
     }
     const dataStr = JSON.stringify(scores, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
@@ -346,10 +346,10 @@ function App() {
     reader.onload = (e) => {
       try {
         const importedData = JSON.parse(e.target.result);
-        
+
         // Basic validation: check if it's an array and if items have expected keys
         if (Array.isArray(importedData) && importedData.every(item => item.songName && item.technicalScore !== undefined)) {
-          setScores(importedData); 
+          setScores(importedData);
           setMessage({ type: 'success', text: `Successfully imported ${importedData.length} scores!` });
         } else {
           setMessage({ type: 'error', text: 'Import failed: File content is not a valid score array.' });
@@ -358,8 +358,8 @@ function App() {
         console.error("Error parsing JSON during import:", error);
         setMessage({ type: 'error', text: 'Import failed: Error parsing JSON file.' });
       } finally {
-          // Clear the file input value so the same file can be selected again if needed
-          event.target.value = '';
+        // Clear the file input value so the same file can be selected again if needed
+        event.target.value = '';
       }
     };
     reader.readAsText(file);
@@ -373,30 +373,30 @@ function App() {
           Project Sekai Score Tracker
         </h1>
         <p className="text-gray-400 mt-1">Technical Score and Rating Calculator</p>
-        
+
         {/* PLAYER RATING DISPLAY (NEW) */}
         <div className="mt-4 pt-4 border-t border-gray-700 mx-auto max-w-sm">
-            <p className="text-sm font-semibold text-gray-400 uppercase">Player Rating (Top 10)</p>
-            <p className="text-5xl font-black text-amber-400 tracking-wider mt-1">
-                {playerRating.toFixed(2)}
-            </p>
+          <p className="text-sm font-semibold text-gray-400 uppercase">Player Rating (Top 10)</p>
+          <p className="text-5xl font-black text-amber-400 tracking-wider mt-1">
+            {playerRating.toFixed(2)}
+          </p>
         </div>
-        
+
       </header>
-      
+
       <main className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* --- ADD SCORE FORM --- */}
         <div id="addScoreBlock" className="bg-gray-800 p-6 rounded-lg shadow-lg h-fit">
           <h2 className="text-2xl font-bold mb-4 text-gray-200 border-b border-gray-700 pb-2">Add a Score</h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            
+
             {/* Song Metadata */}
             <div id="metadataBlock" className="bg-gray-700 border border-gray-600 p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-3 text-indigo-400">Song Metadata</h3>
               <div className="space-y-3">
-                
+
                 <div className="flex flex-col">
                   <label htmlFor="songName" className="text-sm font-medium text-gray-300">Song Name</label>
                   <input type="text" id="songName" name="songName" required className="p-2 border border-gray-600 rounded-md bg-gray-800 text-white focus:ring-indigo-500 focus:border-indigo-500" />
@@ -425,7 +425,7 @@ function App() {
             <div id="scoringDataBlock" className="bg-gray-600 border border-gray-500 p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-3 text-pink-400">Scoring Data (Note Hits)</h3>
               <div id="noteHitCounters" className="grid grid-cols-3 gap-2">
-                
+
                 {/* Inputs for Hits */}
                 <input type="number" id="perfectHits" name="perfectHits" placeholder="Perfect" min="0" required className="p-2 border border-gray-600 rounded-md bg-gray-800 text-white" />
                 <input type="number" id="greatHits" name="greatHits" placeholder="Great" min="0" required className="p-2 border border-gray-600 rounded-md bg-gray-800 text-white" />
@@ -439,45 +439,45 @@ function App() {
                 </div>
               </div>
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition duration-150"
             >
               Calculate & Save Score
             </button>
           </form>
         </div>
-        
+
         {/* --- SCORES DISPLAY --- */}
         <div id="scoresBlock" className="lg:col-span-1">
-           {/* --- Import/Export Buttons --- */}
-            <div className="flex justify-start space-x-3 mb-4">
-                <button
-                    onClick={handleExport}
-                    className="flex items-center space-x-2 py-2 px-4 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg shadow-md transition duration-150 text-sm"
-                >
-                    <Download className="w-4 h-4" />
-                    <span>Export Data</span>
-                </button>
+          {/* --- Import/Export Buttons --- */}
+          <div className="flex justify-start space-x-3 mb-4">
+            <button
+              onClick={handleExport}
+              className="flex items-center space-x-2 py-2 px-4 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg shadow-md transition duration-150 text-sm"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export Data</span>
+            </button>
 
-                <label htmlFor="import-file" 
-                    className="flex items-center space-x-2 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition duration-150 cursor-pointer text-sm"
-                >
-                    <Upload className="w-4 h-4" />
-                    <span>Import Data</span>
-                </label>
-                <input
-                    type="file"
-                    id="import-file"
-                    accept=".json"
-                    onChange={handleImport}
-                    className="hidden"
-                />
-            </div>
-          
+            <label htmlFor="import-file"
+              className="flex items-center space-x-2 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition duration-150 cursor-pointer text-sm"
+            >
+              <Upload className="w-4 h-4" />
+              <span>Import Data</span>
+            </label>
+            <input
+              type="file"
+              id="import-file"
+              accept=".json"
+              onChange={handleImport}
+              className="hidden"
+            />
+          </div>
+
           <h2 className="text-2xl font-bold mb-4 text-gray-200 border-b border-gray-700 pb-2">Recorded Scores ({scores.length})</h2>
-          
+
           <div className="space-y-5">
             {scores.length === 0 ? (
               <p className="text-gray-400 italic p-4 bg-gray-700 rounded-lg shadow-inner">
@@ -488,10 +488,10 @@ function App() {
               scores.slice().reverse().map((score, reversedIndex) => {
                 const originalIndex = scores.length - 1 - reversedIndex;
                 return (
-                  <ScoreBox 
-                    key={originalIndex} 
-                    score={score} 
-                    onDelete={() => deleteScore(originalIndex)} 
+                  <ScoreBox
+                    key={originalIndex}
+                    score={score}
+                    onDelete={() => deleteScore(originalIndex)}
                   />
                 );
               })
@@ -504,7 +504,7 @@ function App() {
       <footer>
         Created by LittleBit | Open-source on GitHub <a href="https://github.com/littlebitstudios/pjsk-tscore-rating-calculator"></a>
       </footer>
-      
+
       <MessageDisplay message={message} onClose={() => setMessage(null)} />
     </div>
   )
