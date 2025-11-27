@@ -1,0 +1,54 @@
+@import url(https://rsms.me/inter/inter.css);
+@import "tailwindcss";
+
+/* User's Base Styles for Dark Theme */
+.app-root {
+    font-family: 'InterVariable', 'Inter', sans-serif;
+    background-color: black;
+    color: white;
+}
+
+.main-header {
+    background-color: #111827;
+    color: #f3f4f6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Custom Card Styles for Structure */
+.score-card-container {
+    background-color: #1f2937;
+    border-bottom: 4px solid #4f46e5;
+}
+
+.form-card {
+    background-color: #1f2937;
+}
+
+.metadata-block {
+    background-color: #374151;
+    border: 1px solid #4b5563;
+}
+
+.scoring-block {
+    background-color: #4b5563;
+    border: 1px solid #6b7280;
+}
+
+/* Text and Accent Colors */
+.text-accent-indigo {
+    color: #818cf8;
+}
+
+.text-accent-pink {
+    color: #f472b6;
+}
+
+.button-submit {
+    background-color: #4f46e5;
+}
+
+.button-submit:hover {
+    background-color: #4338ca;
+}
