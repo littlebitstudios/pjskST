@@ -52,3 +52,13 @@
 .button-submit:hover {
     background-color: #4338ca;
 }
+
+a {
+    color: rgb(0, 166, 255);
+    text-decoration: underline;
+}
+
+footer {
+    text-align: center;
+    margin: 30px;
+}
